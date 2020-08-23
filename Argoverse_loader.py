@@ -48,7 +48,7 @@ def pil_loader(path):
 
 
 def argoverse_load_image(argoverse_data, camera, folder, frame_index):
-    img = argoverse_data.get_image_sync(idx,camera = camera)
+    img = argoverse_data.get_image_sync(int(frame_index),camera = camera)
     return img
 
 
@@ -178,7 +178,7 @@ class Argo_MonoDataset(data.Dataset):
         folder = line[0]
         self.argoverse_data = self.argoverse_loader[int(folder)]
         last_row = np.array([[0.0, 0.0, 0.0, 1.0]])
-        K_ = self.argoverse_data.get_calibration(camera).K
+        K_ = self.argoverse_data.get_calibration(self.camera).K
         K = np.vstack((K_, last_row))
         H = 2056
         W = 2464
@@ -198,9 +198,9 @@ class Argo_MonoDataset(data.Dataset):
         for i in self.frame_idxs:
             if i == "s":
                 other_side = {"r": "l", "l": "r"}[side]
-                inputs[("color", i, -1)] = self.get_color(self.argoverse_data, folder, frame_index, other_side, do_flip)
+                inputs[("color", i, -1)] = self.get_color(folder, frame_index, other_side, do_flip)
             else:
-                inputs[("color", i, -1)] = self.get_color(self.argoverse_data, folder, frame_index + i, side, do_flip)
+                inputs[("color", i, -1)] = self.get_color(folder, frame_index + i, side, do_flip)
 
         # adjusting intrinsics to match each scale in the pyramid
         for scale in range(self.num_scales):
@@ -272,10 +272,10 @@ class ArgoverseDataset(Argo_MonoDataset):
         return color
     
     def get_depth(self, folder, frame_index, side, do_flip):
-        img_path = self.argoverse_data.get_image(60, camera, load=False)
-        img = self.argoverse_data.get_image(60, camera, load=True)
-        Lidar_id = self.argoverse_data.image_list_sync[camera].index(img_path)
-        calib = self.argoverse_data.get_calibration(camera)
+        img_path = self.argoverse_data.get_image(int(frame_index), self.camera, load=False)
+        img = self.argoverse_data.get_image(int(frame_index), self.camera, load=True)
+        Lidar_id = self.argoverse_data.image_list_sync[self.camera].index(img_path)
+        calib = self.argoverse_data.get_calibration(self.camera)
         pc = self.argoverse_data.get_lidar(Lidar_id)
         uv = calib.project_ego_to_image(pc).T
         idx_ = np.where(np.logical_and.reduce((uv[0, :] >= 0.0, uv[0, :] < np.shape(img)[1] - 1.0,
