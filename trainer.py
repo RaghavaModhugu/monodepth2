@@ -20,6 +20,7 @@ import json
 from utils import *
 from kitti_utils import *
 from layers import *
+from Argoverse_loader import *
 
 import datasets
 import networks
@@ -112,7 +113,8 @@ class Trainer:
 
         # data
         datasets_dict = {"kitti": datasets.KITTIRAWDataset,
-                         "kitti_odom": datasets.KITTIOdomDataset}
+                         "kitti_odom": datasets.KITTIOdomDataset,
+                         "Argoverse": ArgoverseDataset}
         self.dataset = datasets_dict[self.opt.dataset]
 
         fpath = os.path.join(os.path.dirname(__file__), "splits", self.opt.split, "{}_files.txt")
