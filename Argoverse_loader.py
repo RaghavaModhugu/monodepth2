@@ -176,7 +176,7 @@ class Argo_MonoDataset(data.Dataset):
 
         line = self.filenames[index].split()
         folder = line[0]
-        self.argoverse_data = self.argoverse_loader[int(folder)]
+        self.argoverse_data = self.argoverse_loader.get(folder)
         last_row = np.array([[0.0, 0.0, 0.0, 1.0]])
         K_ = self.argoverse_data.get_calibration(self.camera).K
         K = np.vstack((K_, last_row))
