@@ -210,8 +210,8 @@ class Argo_MonoDataset(data.Dataset):
 
             inv_K = np.linalg.pinv(K)
 
-            inputs[("K", scale)] = torch.from_numpy(K).type(torch.DoubleTensor)
-            inputs[("inv_K", scale)] = torch.from_numpy(inv_K).type(torch.DoubleTensor)
+            inputs[("K", scale)] = torch.from_numpy(K).type(torch.float32)
+            inputs[("inv_K", scale)] = torch.from_numpy(inv_K).type(torch.float32)
 
         if do_color_aug:
             color_aug = transforms.ColorJitter.get_params(
