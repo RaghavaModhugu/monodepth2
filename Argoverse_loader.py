@@ -93,7 +93,7 @@ class Argo_MonoDataset(data.Dataset):
 
         self.loader = argoverse_load_image
         self.argoverse_loader = ArgoverseTrackingLoader(self.data_path)
-        self.camera = self.argoverse_loader.CAMERA_LIST[-2]
+        self.camera = self.argoverse_loader.CAMERA_LIST[0]
         self.argoverse_data = 0
         
         self.to_tensor = transforms.ToTensor()

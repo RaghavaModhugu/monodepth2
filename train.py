@@ -15,6 +15,5 @@ opts = options.parse()
 
 
 if __name__ == "__main__":
-    pdb.set_trace()
     trainer = Trainer(opts)
     trainer.train()
