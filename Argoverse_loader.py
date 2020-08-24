@@ -48,7 +48,7 @@ def pil_loader(path):
 
 
 def argoverse_load_image(argoverse_data, camera, folder, frame_index):
-    img = argoverse_data.get_image_sync(int(frame_index),camera = camera)
+    img = Image.fromarray(argoverse_data.get_image_sync(int(frame_index),camera = camera)[8:, :]).convert('RGB')
     return img
 
 
@@ -210,8 +210,8 @@ class Argo_MonoDataset(data.Dataset):
 
             inv_K = np.linalg.pinv(K)
 
-            inputs[("K", scale)] = torch.from_numpy(K)
-            inputs[("inv_K", scale)] = torch.from_numpy(inv_K)
+            inputs[("K", scale)] = torch.from_numpy(K).type(torch.DoubleTensor)
+            inputs[("inv_K", scale)] = torch.from_numpy(inv_K).type(torch.DoubleTensor)
 
         if do_color_aug:
             color_aug = transforms.ColorJitter.get_params(
