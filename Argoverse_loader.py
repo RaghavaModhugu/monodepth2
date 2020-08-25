@@ -22,7 +22,7 @@ from kitti_utils import generate_depth_map
 
 import argoverse
 from argoverse.data_loading.argoverse_tracking_loader import ArgoverseTrackingLoader
-
+import pdb
 
 # In[2]:
 
@@ -48,7 +48,10 @@ def pil_loader(path):
 
 
 def argoverse_load_image(argoverse_data, camera, folder, frame_index):
-    img = Image.fromarray(argoverse_data.get_image_sync(int(frame_index),camera = camera)[8:, :]).convert('RGB')
+    try:
+         img = Image.fromarray(argoverse_data.get_image(int(frame_index),camera = camera)[8:, :]).convert('RGB')
+    except:
+         print(folder, frame_index)
     return img
 
 
